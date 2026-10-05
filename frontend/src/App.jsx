@@ -1,0 +1,123 @@
+import { useState } from 'react';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import ImageUploadCard from './components/ImageUploadCard';
+import SolveButton from './components/SolveButton';
+import AnswerCard from './components/AnswerCard';
+import NextQuestionButton from './components/NextQuestionButton';
+
+function App() {
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [answer, setAnswer] = useState(null);
+  const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleNewSession = () => {
+    setImage1(null);
+    setImage2(null);
+    setAnswer(null);
+    setError(null);
+    setIsLoading(false);
+  };
+
+  const handleSolve = () => {
+    if (!image1 && !image2) {
+      setError('Add at least one image to solve the question.');
+      return;
+    }
+
+    setError(null);
+    setIsLoading(true);
+
+    // Simulate AI processing
+    setTimeout(() => {
+      setAnswer({
+        answer: 'C',
+        answerText: 'LED',
+        confidence: 83.5,
+        latency: '0.84s'
+      });
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const handleNextQuestion = () => {
+    setImage1(null);
+    setImage2(null);
+    setAnswer(null);
+    setError(null);
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        onNewSession={handleNewSession}
+      />
+
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+
+        <div className="flex-1 overflow-y-auto p-4 md:p-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Image Upload Area */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+              <ImageUploadCard
+                image={image1}
+                onImageChange={setImage1}
+                label="Image 1"
+              />
+              <ImageUploadCard
+                image={image2}
+                onImageChange={setImage2}
+                label="Image 2"
+              />
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* Solve Button */}
+            <div className="mb-6">
+              <SolveButton
+                onClick={handleSolve}
+                isLoading={isLoading}
+                disabled={!image1 && !image2}
+              />
+            </div>
+
+            {/* Loading State */}
+            {isLoading && (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-indigo-600 mb-4"></div>
+                  <p className="text-gray-600">Analyzing question...</p>
+                </div>
+              </div>
+            )}
+
+            {/* Answer Card */}
+            {answer && !isLoading && (
+              <div className="mb-6">
+                <AnswerCard answer={answer} />
+                <div className="mt-6">
+                  <NextQuestionButton onClick={handleNextQuestion} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default App;
