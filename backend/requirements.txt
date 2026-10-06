@@ -1,0 +1,15 @@
+# Core FastAPI Dependencies
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+pydantic==2.13.5
+
+# OCR Dependencies (PaddleOCR with local models)
+paddlepaddle==3.2.2
+paddleocr==3.7.0
+
+# HTTP Client for Cloudflare Clef-flash API
+requests==2.34.2
+
+# Environment Variables
+python-dotenv==1.2.4
