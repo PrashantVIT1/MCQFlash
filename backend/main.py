@@ -104,6 +104,55 @@ def get_answer(texts):
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Cloudflare network error: {e}")
 
+# ---------------------------------------------------------
+# EXTRACT TEXT
+# ---------------------------------------------------------
+def extract_text(image_path: str):
+    image_path = Path(image_path)
+
+    if not image_path.exists():
+        raise FileNotFoundError(
+            f"Image not found: {image_path}"
+        )
+
+    # Start OCR timer
+    start = time.perf_counter()
+
+    # Run PaddleOCR
+    result = ocr.predict(str(image_path))
+
+    # End OCR timer
+    elapsed = time.perf_counter() - start
+
+    texts = []
+    scores = []
+    boxes = []
+
+    for res in result:
+
+        # PaddleOCR result object
+        data = res.json
+
+        if callable(data):
+            data = data()
+
+        if isinstance(data, dict):
+            data = data.get("res", data)
+
+        texts.extend(
+            data.get("rec_texts", [])
+        )
+
+        scores.extend(
+            data.get("rec_scores", [])
+        )
+
+        boxes.extend(
+            data.get("rec_boxes", [])
+        )
+
+    return texts, scores, boxes, elapsed
+
 def predict_answer_from_image(image_path: str):
 
     texts, scores, boxes, elapsed = extract_text(image_path)
