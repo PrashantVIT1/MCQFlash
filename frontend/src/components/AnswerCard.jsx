@@ -6,11 +6,8 @@ function AnswerCard({ answer }) {
       <div className="space-y-4">
         {/* Answer Display */}
         <div className="flex items-baseline gap-3">
-          <span className="text-4xl font-bold text-indigo-600">
+          <span className="text-2xl md:text-3xl font-bold text-indigo-600">
             {answer.answer}
-          </span>
-          <span className="text-2xl text-gray-700">
-            — {answer.answerText}
           </span>
         </div>
 
@@ -19,7 +16,9 @@ function AnswerCard({ answer }) {
           <div>
             <p className="text-sm text-gray-500 mb-1">Confidence</p>
             <p className="text-lg font-semibold text-gray-900">
-              {answer.confidence}%
+              {typeof answer.confidence === 'number'
+                ? `${answer.confidence.toFixed(2)}%`
+                : answer.confidence}
             </p>
           </div>
           <div>

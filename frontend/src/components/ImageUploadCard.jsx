@@ -12,7 +12,8 @@ function ImageUploadCard({ image, onImageChange, label }) {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
       const imageUrl = URL.createObjectURL(file);
-      onImageChange(imageUrl);
+      // Store both URL and file object
+      onImageChange({ url: imageUrl, file: file });
     }
   };
 
@@ -49,7 +50,7 @@ function ImageUploadCard({ image, onImageChange, label }) {
         <>
           {/* Image Preview */}
           <img
-            src={image}
+            src={image.url || image}
             alt={label}
             className="w-full h-full object-contain max-h-[200px] md:max-h-[280px]"
           />

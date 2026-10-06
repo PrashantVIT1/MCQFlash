@@ -5,6 +5,9 @@ import ImageUploadCard from './components/ImageUploadCard';
 import SolveButton from './components/SolveButton';
 import AnswerCard from './components/AnswerCard';
 import NextQuestionButton from './components/NextQuestionButton';
+import { compressImage } from './utils/imageCompression';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 function App() {
   const [image1, setImage1] = useState(null);
@@ -22,7 +25,7 @@ function App() {
     setIsLoading(false);
   };
 
-  const handleSolve = () => {
+  const handleSolve = async () => {
     if (!image1 && !image2) {
       setError('Add at least one image to solve the question.');
       return;
@@ -31,16 +34,49 @@ function App() {
     setError(null);
     setIsLoading(true);
 
-    // Simulate AI processing
-    setTimeout(() => {
-      setAnswer({
-        answer: 'C',
-        answerText: 'LED',
-        confidence: 83.5,
-        latency: '0.84s'
+    try {
+      // Use image1 if available, otherwise image2
+      const imageToProcess = image1 || image2;
+      const file = imageToProcess.file;
+
+      if (!file) {
+        throw new Error('No file data available');
+      }
+
+      // Compress image before sending
+      const compressedBlob = await compressImage(file, 1280, 0.80);
+
+      // Create FormData for multipart upload
+      const formData = new FormData();
+      formData.append('image', compressedBlob, 'compressed.jpg');
+
+      // Send to backend
+      const response = await fetch(`${API_BASE_URL}/solve`, {
+        method: 'POST',
+        body: formData,
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || 'Failed to process image');
+      }
+
+      const data = await response.json();
+
+      // Parse response and set answer
+      setAnswer({
+        answer: data.message || 'Unknown',
+        answerText: '', // Backend returns message directly
+        confidence: parseFloat(data.confidence) || 0,
+        latency: data.total_latency || '0ms'
+      });
+
+    } catch (err) {
+      console.error('Error solving MCQ:', err);
+      setError(err.message || 'Failed to process the image. Please try again.');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleNextQuestion = () => {
