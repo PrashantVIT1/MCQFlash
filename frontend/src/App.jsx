@@ -7,7 +7,11 @@ import AnswerCard from './components/AnswerCard';
 import NextQuestionButton from './components/NextQuestionButton';
 import { compressImage } from './utils/imageCompression';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error('VITE_API_BASE_URL is not configured');
+}
 
 function App() {
   const [image1, setImage1] = useState(null);
