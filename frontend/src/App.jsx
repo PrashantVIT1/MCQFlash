@@ -5,6 +5,7 @@ import ImageUploadCard from './components/ImageUploadCard';
 import SolveButton from './components/SolveButton';
 import AnswerCard from './components/AnswerCard';
 import NextQuestionButton from './components/NextQuestionButton';
+import PerformanceCard from './components/PerformanceCard';
 import { compressImage } from './utils/imageCompression';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -104,6 +105,9 @@ function App() {
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8">
           <div className="max-w-4xl mx-auto">
+            {/* Performance Card */}
+            <PerformanceCard />
+
             {/* Image Upload Area */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
               <ImageUploadCard
