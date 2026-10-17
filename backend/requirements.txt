@@ -1,8 +1,10 @@
 # Core FastAPI Dependencies
+numpy<2
 fastapi==0.142.2
 uvicorn[standard]==0.54.0
 python-multipart==0.0.32
 pydantic==2.13.5
+setuptools>=70
 
 # OCR Dependencies (PaddleOCR with local models)
 paddlepaddle==3.2.2

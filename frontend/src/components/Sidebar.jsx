@@ -32,7 +32,7 @@ function Sidebar({ isOpen, onToggle, onNewSession }) {
         <div className="flex flex-col h-full p-6">
           {/* Logo */}
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-gray-900">MCQFlash</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">MCQFlash1</h1>
             <p className="text-sm text-gray-500 mt-1">Snap. Solve. Instantly.</p>
           </div>
 
@@ -60,7 +60,7 @@ function Sidebar({ isOpen, onToggle, onNewSession }) {
 
           {/* Footer placeholder */}
           <div className="pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-400">MCQFlash v1.0</p>
+            <p className="text-xs text-gray-400">MCQFlash1 v1.0</p>
           </div>
         </div>
       </aside>

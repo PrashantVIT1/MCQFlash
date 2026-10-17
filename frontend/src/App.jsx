@@ -6,6 +6,7 @@ import SolveButton from './components/SolveButton';
 import AnswerCard from './components/AnswerCard';
 import NextQuestionButton from './components/NextQuestionButton';
 import PerformanceCard from './components/PerformanceCard';
+import ModeSelector from './components/ModeSelector';
 import { compressImage } from './utils/imageCompression';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -21,6 +22,7 @@ function App() {
   const [answer, setAnswer] = useState(null);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(2); // Default: Direct Image
 
   const handleNewSession = () => {
     setImage1(null);
@@ -53,6 +55,7 @@ function App() {
 
       // Create FormData for multipart upload
       const formData = new FormData();
+      formData.append('option', String(selectedOption));
       formData.append('image', compressedBlob, 'compressed.jpg');
 
       // Send to backend
@@ -73,7 +76,10 @@ function App() {
         answer: data.message || 'Unknown',
         answerText: '', // Backend returns message directly
         confidence: parseFloat(data.confidence) || 0,
-        latency: data.total_latency || '0ms'
+        latency: data.total_latency || '0ms',
+        ocrTime: data.ocr_time || '0ms',
+        decisionLatency: data.decision_latency || '0ms',
+        mode: data.mode || 'unknown'
       });
 
     } catch (err) {
@@ -90,6 +96,7 @@ function App() {
     setAnswer(null);
     setError(null);
     setIsLoading(false);
+    // Preserve selectedOption (don't reset it)
   };
 
   return (
@@ -128,6 +135,12 @@ function App() {
                 {error}
               </div>
             )}
+
+            {/* Mode Selector */}
+            <ModeSelector
+              selectedOption={selectedOption}
+              onOptionChange={setSelectedOption}
+            />
 
             {/* Solve Button */}
             <div className="mb-6">
