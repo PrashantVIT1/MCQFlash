@@ -17,7 +17,6 @@ if (!API_BASE_URL) {
 
 function App() {
   const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [answer, setAnswer] = useState(null);
   const [error, setError] = useState(null);
@@ -26,14 +25,13 @@ function App() {
 
   const handleNewSession = () => {
     setImage1(null);
-    setImage2(null);
     setAnswer(null);
     setError(null);
     setIsLoading(false);
   };
 
   const handleSolve = async () => {
-    if (!image1 && !image2) {
+    if (!image1) {
       setError('Add at least one image to solve the question.');
       return;
     }
@@ -42,8 +40,8 @@ function App() {
     setIsLoading(true);
 
     try {
-      // Use image1 if available, otherwise image2
-      const imageToProcess = image1 || image2;
+      // Use image1 if available
+      const imageToProcess = image1;
       const file = imageToProcess.file;
 
       if (!file) {
@@ -92,7 +90,6 @@ function App() {
 
   const handleNextQuestion = () => {
     setImage1(null);
-    setImage2(null);
     setAnswer(null);
     setError(null);
     setIsLoading(false);
@@ -116,16 +113,11 @@ function App() {
             <PerformanceCard />
 
             {/* Image Upload Area */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 md:gap-6 mb-6">
               <ImageUploadCard
                 image={image1}
                 onImageChange={setImage1}
                 label="Image 1"
-              />
-              <ImageUploadCard
-                image={image2}
-                onImageChange={setImage2}
-                label="Image 2"
               />
             </div>
 
@@ -147,7 +139,7 @@ function App() {
               <SolveButton
                 onClick={handleSolve}
                 isLoading={isLoading}
-                disabled={!image1 && !image2}
+                disabled={!image1}
               />
             </div>
 
